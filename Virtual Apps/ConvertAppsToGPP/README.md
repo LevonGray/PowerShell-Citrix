@@ -4,10 +4,10 @@ The following script will extract all the required information from Citrix Virtu
 
 <b>This needs to be run on a server with the Citrix PowerShell modules as well as the Active Directory Remote Server Administration Tools (RSAT) Powershell modules </b>
 
-
+2020-02-25:
+	Update script to accept user input for filepath\name and delivery group. Add Error handling for that input (script stops if invalid)
 
 2020-02-24: 
 	Initial push of script. 
  
-	Changes to come:
-    create a function out of this script to specify path and delivery group by name.
+
