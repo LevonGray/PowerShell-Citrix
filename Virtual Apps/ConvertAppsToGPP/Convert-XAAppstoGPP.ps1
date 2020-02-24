@@ -9,12 +9,28 @@
 add-pssnapin Citrix*
 import-module activedirectory
 
+#Get  user input for destination file and Delivery group
+$Path = Read-Host "Enter Filename and Path e.g c:\temp\shortcuts.xml"
+try {
+    New-Item $Path -ItemType File -Force -ErrorAction Stop
+}
+catch {
+    Write-Host "Invalid file or path. make sure the path is valid and you have write permission." -ForegroundColor Yellow
+    break
+}
+$Deliverygroup = Read-Host "Enter Citrix Delivery Group to export Published applications from"
+try {
+    $MainDG = get-brokerdesktopgroup $Deliverygroup -ErrorAction Stop
+}
+catch {
+    Write-Host "Invalid Delivery Group Name. Try one of the following:" -ForegroundColor Yellow
+    (Get-BrokerDesktopGroup).name
+    break
+}
+
 #Get Published application information 
-# This is taking the apps from the Delivery group with the most machines attached. *** May adjust this later when converting to a function to specify desktop name ***
-$MainDG = (get-brokerdesktopgroup | Sort-Object -Descending totaldesktops)[0]
 $APPS = Get-BrokerApplication -DesktopGroupUid $MainDG.Uid
 
-$Path = 'C:\temp\shortcuts.xml'
 # get an XMLTextWriter to create the XML
 $XmlWriter = New-Object System.XMl.XmlTextWriter($Path,$Null)
 
@@ -86,4 +102,5 @@ $xmlWriter.WriteEndDocument()
 $xmlWriter.Flush()
 $xmlWriter.Close()
 
+Write-host "File can be found here: $($Path)"
  
